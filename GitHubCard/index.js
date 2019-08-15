@@ -3,6 +3,16 @@
            https://api.github.com/users/<your name>
 */
 
+axios
+	.get("https://api.github.com/users/timothyshores")
+	.then(res => {
+		console.log(res.data);
+		document.querySelector(".cards").appendChild(cardCreator(res.data));
+	})
+	.catch(err => {
+		console.log(err);
+	});
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -29,6 +39,7 @@ const followersArray = [];
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
 
+
 <div class="card">
   <img src={image url of user} />
   <div class="card-info">
@@ -45,6 +56,18 @@ const followersArray = [];
 </div>
 
 */
+
+const cardCreator = data => {
+	const div = document.createElement("div");
+	div.classList.add("card");
+
+	const img = document.createElement("img");
+	img.src = data.avatar_url;
+
+	div.append(img);
+
+	return div;
+};
 
 /* List of LS Instructors Github username's: 
   tetondan
