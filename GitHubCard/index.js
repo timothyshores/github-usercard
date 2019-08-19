@@ -1,10 +1,12 @@
+// Grab the data from your own GitHub profile
+const card = document.querySelector(".cards");
+
 axios
 	.get("https://api.github.com/users/timothyshores")
-	.then(res =>
-		document.querySelector(".cards").appendChild(cardCreator(res.data))
-	)
+	.then(res => card.appendChild(cardCreator(res.data)))
 	.catch(err => console.log(err));
 
+// Function that takes res.data from a GitHub profile axios GET request and returns an HTML card
 const cardCreator = data => {
 	const divCard = document.createElement("div");
 	divCard.classList.add("card");
@@ -40,18 +42,19 @@ const cardCreator = data => {
 	pFollowing.textContent = `Following: ${data.following}`;
 
 	const pBio = document.createElement("p");
-	pBio.textContent = `Bio: ${data.bio}`;
+
+	data.bio == null
+		? (pBio.textContent = "")
+		: (pBio.textContent = `Bio: ${data.bio}`);
+
+	const divInfoTop = [h3Name, pUsername, pLocation, pProfile];
+	const divInfoBottom = [pFollowers, pFollowing, pBio];
 
 	divCard.appendChild(img);
 	divCard.appendChild(divInfo);
-	divInfo.append(h3Name);
-	divInfo.append(pUsername);
-	divInfo.append(pLocation);
-	divInfo.append(pProfile);
+	divInfoTop.map(element => divInfo.append(element));
 	pProfile.appendChild(aProfile);
-	divInfo.append(pFollowers);
-	divInfo.append(pFollowing);
-	divInfo.append(pBio);
+	divInfoBottom.map(element => divInfo.append(element));
 
 	return divCard;
 };
@@ -64,9 +67,9 @@ const followersArray = [
 	"bigknell"
 ];
 
-for (let follower of followersArray) {
+followersArray.map(follower =>
 	axios
 		.get(`https://api.github.com/users/${follower}`)
-		.then(res => document.querySelector(".cards").append(cardCreator(res.data)))
-		.catch(err => console.log(err));
-}
+		.then(res => card.append(cardCreator(res.data)))
+		.catch(err => console.log(err))
+);
